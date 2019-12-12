@@ -2,35 +2,20 @@ require 'fast'
 
 module Dudes
   class Calculator
-    # FIXME: Don't work somehow?.. So resorting to monkey-patch below :(
-    #
-    # using Module.new do
-    #   refine Astrolabe::Node do
-    #     def fast(path)
-    #       Fast.search(path, self)
-    #     end
+    using(Module.new do
+      refine Astrolabe::Node do
+        def fast(path)
+          Fast.search(path, self)
+        end
 
-    #     # Lot of chunks of code parsed as (:foo, ...) if it is a single statement,
-    #     # or (:begin, (:foo, ...), (:bar, ...)) if it is several independent statements.
-    #     # Robustly make it an array of nodes
-    #     def arrayify
-    #       type == :begin ? children : [self]
-    #     end
-    #   end
-    # end
-
-    class ::Astrolabe::Node
-      def fast(path)
-        Fast.search(path, self)
+        # Lot of chunks of code parsed as (:foo, ...) if it is a single statement,
+        # or (:begin, (:foo, ...), (:bar, ...)) if it is several independent statements.
+        # Robustly make it an array of nodes
+        def arrayify
+          type == :begin ? children : [self]
+        end
       end
-
-      # Lot of chunks of code parsed as (:foo, ...) if it is a single statement,
-      # or (:begin, (:foo, ...), (:bar, ...)) if it is several independent statements.
-      # Robustly make it an array of nodes
-      def arrayify
-        type == :begin ? children : [self]
-      end
-    end
+    end)
 
     def initialize(code)
       @ast = Fast.ast(code)
