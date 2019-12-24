@@ -35,4 +35,6 @@ class ThingCollection
       'К сожалению, нет одежды для такой погоды.'
     end
   end
+
+  def empty_method; end
 end

@@ -48,11 +48,23 @@ module Dudes
       return unless node.type == :def
 
       name, args, body = *node
+
+      return empty_body(name, args) if body.nil?
+
       {
         name: name,
         args: args.children.count,
         length: count_statements(body.arrayify),
         conditions: count_conditions(body),
+      }
+    end
+
+    def empty_body(name, args)
+      {
+        name: name,
+        args: args.children.count,
+        length: 0,
+        conditions: 0,
       }
     end
 
